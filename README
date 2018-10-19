@@ -1,0 +1,7 @@
+Project for AI 2 using the MIVIA road audio events data set.
+Attempting to reproduce the results shown in the paper cited below.
+This paper is also cited as a requirement of using the MIVIA data set.
+
+
+Pasquale Foggia, Nicolai Petkov, Alessia Saggese, Nicola Strisciuglio, Mario Vento: Audio surveillance of roads: a system for detecting anomalous sounds In: IEEE, (Ed.): IEEE Transactions on Intelligent Transportation Systems, Volume: 17, Issue: 1, Jan. 2016
+
