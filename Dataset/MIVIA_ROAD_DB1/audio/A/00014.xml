@@ -1,0 +1,37 @@
+<root xml_tb_version="3.1" idx="1" type="struct" size="1 1">
+  <events idx="1" type="cell" size="1 4">
+    <item idx="1" type="struct" size="1 1">
+      <PATHNAME idx="1" type="char" size="1 8">0009.wav</PATHNAME>
+      <CLASS_ID idx="1" type="double" size="1 1">2</CLASS_ID>
+      <CLASS_NAME idx="1" type="char" size="1 8">0009.wav</CLASS_NAME>
+      <STARTSECOND idx="1" type="double" size="1 1">6</STARTSECOND>
+      <ENDSECOND idx="1" type="double" size="1 1">8.101428571428572</ENDSECOND>
+    </item>
+    <item idx="2" type="struct" size="1 1">
+      <PATHNAME idx="1" type="char" size="1 8">0038.wav</PATHNAME>
+      <CLASS_ID idx="1" type="double" size="1 1">2</CLASS_ID>
+      <CLASS_NAME idx="1" type="char" size="1 8">0038.wav</CLASS_NAME>
+      <STARTSECOND idx="1" type="double" size="1 1">13.10145124716553</STARTSECOND>
+      <ENDSECOND idx="1" type="double" size="1 1">14.27049886621315</ENDSECOND>
+    </item>
+    <item idx="3" type="struct" size="1 1">
+      <PATHNAME idx="1" type="char" size="1 8">0025.wav</PATHNAME>
+      <CLASS_ID idx="1" type="double" size="1 1">2</CLASS_ID>
+      <CLASS_NAME idx="1" type="char" size="1 8">0025.wav</CLASS_NAME>
+      <STARTSECOND idx="1" type="double" size="1 1">21.27052154195011</STARTSECOND>
+      <ENDSECOND idx="1" type="double" size="1 1">22.37251700680272</ENDSECOND>
+    </item>
+    <item idx="4" type="struct" size="1 1">
+      <PATHNAME idx="1" type="char" size="1 8">0030.wav</PATHNAME>
+      <CLASS_ID idx="1" type="double" size="1 1">2</CLASS_ID>
+      <CLASS_NAME idx="1" type="char" size="1 8">0030.wav</CLASS_NAME>
+      <STARTSECOND idx="1" type="double" size="1 1">29.37253968253968</STARTSECOND>
+      <ENDSECOND idx="1" type="double" size="1 1">31.09206349206349</ENDSECOND>
+    </item>
+  </events>
+  <background idx="1" type="struct" size="1 1">
+    <CLASS_ID idx="1" type="double" size="1 1">1</CLASS_ID>
+    <CLASS_NAME idx="1" type="char" size="1 7">traffic</CLASS_NAME>
+    <PATHNAME idx="1" type="char" size="1 19">city-traffic-15.wav</PATHNAME>
+  </background>
+</root>

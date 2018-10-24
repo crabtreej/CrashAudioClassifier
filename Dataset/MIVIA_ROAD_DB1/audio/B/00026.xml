@@ -1,0 +1,58 @@
+<root xml_tb_version="3.1" idx="1" type="struct" size="1 1">
+  <events idx="1" type="cell" size="1 7">
+    <item idx="1" type="struct" size="1 1">
+      <PATHNAME idx="1" type="char" size="1 8">0022.wav</PATHNAME>
+      <CLASS_ID idx="1" type="double" size="1 1">2</CLASS_ID>
+      <CLASS_NAME idx="1" type="char" size="1 8">0022.wav</CLASS_NAME>
+      <STARTSECOND idx="1" type="double" size="1 1">7</STARTSECOND>
+      <ENDSECOND idx="1" type="double" size="1 1">8.682222222222222</ENDSECOND>
+    </item>
+    <item idx="2" type="struct" size="1 1">
+      <PATHNAME idx="1" type="char" size="1 8">0057.wav</PATHNAME>
+      <CLASS_ID idx="1" type="double" size="1 1">3</CLASS_ID>
+      <CLASS_NAME idx="1" type="char" size="1 8">0057.wav</CLASS_NAME>
+      <STARTSECOND idx="1" type="double" size="1 1">14.68224489795918</STARTSECOND>
+      <ENDSECOND idx="1" type="double" size="1 1">18.53510204081633</ENDSECOND>
+    </item>
+    <item idx="3" type="struct" size="1 1">
+      <PATHNAME idx="1" type="char" size="1 8">0042.wav</PATHNAME>
+      <CLASS_ID idx="1" type="double" size="1 1">2</CLASS_ID>
+      <CLASS_NAME idx="1" type="char" size="1 8">0042.wav</CLASS_NAME>
+      <STARTSECOND idx="1" type="double" size="1 1">23.53512471655329</STARTSECOND>
+      <ENDSECOND idx="1" type="double" size="1 1">24.88501133786848</ENDSECOND>
+    </item>
+    <item idx="4" type="struct" size="1 1">
+      <PATHNAME idx="1" type="char" size="1 8">0036.wav</PATHNAME>
+      <CLASS_ID idx="1" type="double" size="1 1">2</CLASS_ID>
+      <CLASS_NAME idx="1" type="char" size="1 8">0036.wav</CLASS_NAME>
+      <STARTSECOND idx="1" type="double" size="1 1">30.88503401360544</STARTSECOND>
+      <ENDSECOND idx="1" type="double" size="1 1">33.43650793650794</ENDSECOND>
+    </item>
+    <item idx="5" type="struct" size="1 1">
+      <PATHNAME idx="1" type="char" size="1 8">0002.wav</PATHNAME>
+      <CLASS_ID idx="1" type="double" size="1 1">3</CLASS_ID>
+      <CLASS_NAME idx="1" type="char" size="1 8">0002.wav</CLASS_NAME>
+      <STARTSECOND idx="1" type="double" size="1 1">40.4365306122449</STARTSECOND>
+      <ENDSECOND idx="1" type="double" size="1 1">42.01458049886622</ENDSECOND>
+    </item>
+    <item idx="6" type="struct" size="1 1">
+      <PATHNAME idx="1" type="char" size="1 8">0010.wav</PATHNAME>
+      <CLASS_ID idx="1" type="double" size="1 1">3</CLASS_ID>
+      <CLASS_NAME idx="1" type="char" size="1 8">0010.wav</CLASS_NAME>
+      <STARTSECOND idx="1" type="double" size="1 1">47.01460317460317</STARTSECOND>
+      <ENDSECOND idx="1" type="double" size="1 1">50.86092970521542</ENDSECOND>
+    </item>
+    <item idx="7" type="struct" size="1 1">
+      <PATHNAME idx="1" type="char" size="1 8">0032.wav</PATHNAME>
+      <CLASS_ID idx="1" type="double" size="1 1">3</CLASS_ID>
+      <CLASS_NAME idx="1" type="char" size="1 8">0032.wav</CLASS_NAME>
+      <STARTSECOND idx="1" type="double" size="1 1">57.86095238095238</STARTSECOND>
+      <ENDSECOND idx="1" type="double" size="1 1">59.891179138322</ENDSECOND>
+    </item>
+  </events>
+  <background idx="1" type="struct" size="1 1">
+    <CLASS_ID idx="1" type="double" size="1 1">1</CLASS_ID>
+    <CLASS_NAME idx="1" type="char" size="1 7">traffic</CLASS_NAME>
+    <PATHNAME idx="1" type="char" size="1 19">city-traffic-12.wav</PATHNAME>
+  </background>
+</root>
