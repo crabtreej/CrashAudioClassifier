@@ -9,6 +9,7 @@ numpy = "*"
 scipy = "*"
 matplotlib = "*"
 sounddevice = "*"
+librosa = "*"
 
 [dev-packages]
 
