@@ -12,6 +12,4 @@ if __name__ == '__main__':
     classToClipsMapB = parseXMLData.parseXMLCutWavs(pathToData + 'B' + '/')
     classToClipsMapC = parseXMLData.parseXMLCutWavs(pathToData + 'C' + '/')
 
-    classToClipsA2 = convertToFrames.convertToFrames(classToClipsMapA)
-    classToClipsB2 = convertToFrames.convertToFrames(classToClipsMapB)
     print('Processed all audio data')
