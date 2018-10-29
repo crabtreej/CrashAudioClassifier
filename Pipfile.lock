@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "680a213f7595d38d2c04d0c747440fb065cdcf013d7cb2ca61eabeb17caec79e"
+            "sha256": "d775255c15e2af526fbfbac50901e183ed490211b543ab9c4dfea16f8df3b150"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -72,6 +72,14 @@
                 "sha256:c39efa13fbdeb4506c476c9b3babf6a718da943dab7811c206005a4a956c080c"
             ],
             "version": "==4.3.0"
+        },
+        "eyed3": {
+            "hashes": [
+                "sha256:1eb93a51b9735dcb10403bb96679396ce6236f969b6c441ac3a73aa82db8900a",
+                "sha256:ef924eb2e8fffd7c7e3bd4c94dafad4a3b9047fe2dcb76d5dd7d9c37a1f1f8bb"
+            ],
+            "index": "pypi",
+            "version": "==0.8.7"
         },
         "joblib": {
             "hashes": [
@@ -225,11 +233,25 @@
             "index": "pypi",
             "version": "==1.15.3"
         },
+        "pathlib": {
+            "hashes": [
+                "sha256:6940718dfc3eff4258203ad5021090933e5c04707d5ca8cc9e73c94a7894ea9f"
+            ],
+            "version": "==1.0.1"
+        },
         "pycparser": {
             "hashes": [
                 "sha256:a988718abfad80b6b157acce7bf130a30876d27603738ac39f140993246b25b3"
             ],
             "version": "==2.19"
+        },
+        "pydub": {
+            "hashes": [
+                "sha256:07d5eec305110cf1dfe1a0c45eed84bc31f889b1b19feab3859a05dc45b70e7b",
+                "sha256:c703e220917be686fc83d24231849a11c95ba540963ffb3ae5bb322788974d79"
+            ],
+            "index": "pypi",
+            "version": "==0.23.0"
         },
         "pyparsing": {
             "hashes": [
@@ -244,6 +266,13 @@
                 "sha256:88f9287c0174266bb0d8cedd395cfba9c58e87e5ad86b2ce58859bc11be3cf02"
             ],
             "version": "==2.7.5"
+        },
+        "python-magic": {
+            "hashes": [
+                "sha256:f2674dcfad52ae6c49d4803fa027809540b130db1dec928cfbb9240316831375",
+                "sha256:f3765c0f582d2dfc72c15f3b5a82aecfae9498bd29ca840d72f37d7bd38bfcd5"
+            ],
+            "version": "==0.4.15"
         },
         "resampy": {
             "hashes": [

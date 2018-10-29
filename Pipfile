@@ -10,6 +10,8 @@ scipy = "*"
 matplotlib = "*"
 sounddevice = "*"
 librosa = "*"
+"eyed3" = "*"
+pydub = "*"
 
 [dev-packages]
 

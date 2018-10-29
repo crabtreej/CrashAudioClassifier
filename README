@@ -6,3 +6,5 @@ This paper, along with another requested paper, is also cited as a requirement o
 Pasquale Foggia, Nicolai Petkov, Alessia Saggese, Nicola Strisciuglio, Mario Vento: Audio surveillance of roads: a system for detecting anomalous sounds In: IEEE, (Ed.): IEEE Transactions on Intelligent Transportation Systems, Volume: 17, Issue: 1, Jan. 2016
 
 P. Foggia, A. Saggese, N. Strisciuglio, M. Vento (2014): Cascade Classifiers Trained on Gammatonegrams for Reliably Detecting Audio Events. In: IEEE, (Ed.): IEEE International Conference on Advanced Video and Signal-Based Surveillance (AVSS 2014), 2014, ISBN: 978-1-4799-4871-0/14
+
+pyAudioAnalysis library was used for feature extraction, found here https://github.com/tyiannak/pyAudioAnalysis
