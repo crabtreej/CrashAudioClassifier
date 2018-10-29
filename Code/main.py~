@@ -14,6 +14,39 @@ if __name__ == '__main__':
 
     print('Processed all audio data')
 
+classToClipsMapA2 = []
+i = 1
+temp2 = []
 
+for k in classToClipsMapA:
+    for c in classToClipsMap[k]:
+        start = 0
+    	end = 0
+    	length = c.size
+    	samplingRate = 32000 / 10
+    	overLap = int(samplingRate * .50)
+    	end = int(end + samplingRate)
+    	tempChunk = []
+    	while(end < length-1):
+            j = start    
+	    for x in range(start, end):
+	      	tempChunk.append(c[j])
+	    	j = j + 1
 
-    
+	    start = end - overLap
+	    end = end + overLap
+	    if end >= length:
+		end = length - 1
+
+	    j = start 
+	    for x in range(start, end):
+	        tempChunk.append(c[j])
+	        j = j + 1
+	    start = start + overLap
+	    end = end + overLap
+
+	print("Chunk finished")
+	temp2.append(tempChunk)
+
+print(len(temp2))
+print(len(classToClipsMapA[1]))
