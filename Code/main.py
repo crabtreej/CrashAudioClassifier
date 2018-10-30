@@ -16,7 +16,6 @@ if __name__ == '__main__':
     classToClipsMapC = parseXMLData.parseXMLCutWavs(pathToData + 'C' + '/')
 
     print('Processed all audio data')
-
     sf = 32000
 
     #100 milliseconds * sample frequency
@@ -24,19 +23,39 @@ if __name__ == '__main__':
     #50% overlap, so 50 milliseconds * sample frequency for step size
     step_size = 0.05 * sf
 
-    #this returns a matrix that looks like:
-    """
-          zcr   | energy | energy_entropy | .... | mfcc_0 | mfcc_1 | ... | ... |
-    win0  value   value
-    ----
-    win1  value
-    ----
-    .
-    .
-    .
-    """
-    #so featuresMatrix[0] = a list of the zcr for each window, and featuresMatrix[0][0] would be the zcr for the very first window
 
-    #we care about featuresMatrix[8:20] for the 13 MFCCs
-    featuresMatrix, featureNames = fe.stFeatureExtraction(classToClipsMapA[2][0], sf, window_size, step_size)
+    classToMFCCsOfClipsA = {}
+    for classID in classToClipsMapA:
+        classToMFCCsOfClipsA[classID] = []
+        for singleEventAudioClip in classToClipsMapA[classID]:
+            #this returns a matrix that looks like:
+            """
+                  zcr   | energy | energy_entropy | .... | mfcc_0 | mfcc_1 | ... | ... |
+            win0  value   value
+            ----
+            win1  value
+            ----
+            .
+            .
+            .
+            """
+            #so featuresMatrix[0] = a list of the zcr for each window, and featuresMatrix[0][0] 
+            #would be the zcr for the very first window
+            #we care about featuresMatrix[8:20] for the 13 MFCCs
+            featuresMatrix, featureNames = fe.stFeatureExtraction(singleEventAudioClip, sf, window_size, step_size)
+            mfccsForEachWindow = []
+            #for each window, loop through indicies 8-20 to get all of its mfccs into one list, and compile all of
+            #that into a bigger list
+            for i in range(0, len(featuresMatrix[8])):
+                mfccsForOneWindow = []
+                for j in range(8, 21):
+                    mfccsForOneWindow.append(featuresMatrix[j][i])
+                mfccsForEachWindow.append(mfccsForOneWindow)
 
+            #have list that looks like [ [mfcc0, mfcc1, mfcc2...], [mfcc0...], ... ] for each window in one clip
+            classToMFCCsOfClipsA[classID].append(mfccsForEachWindow)
+
+    #code is hideout but basically
+    #use classToMFCCsOfClipsA, i'll add something in for folds B and C in a bit
+    #it's a map that maps classID to a list of audio clips, those audio clips have been decomposed into a list of
+    #frames, and each of those frames are represented by a list of thirteen MFCCs, so it's a list of lists of lists

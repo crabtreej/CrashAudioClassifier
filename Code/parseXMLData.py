@@ -2,7 +2,6 @@ import xml.etree.ElementTree as ET
 import os
 from scipy.io import wavfile
 
-#TODO: make listening to the .wav files some kind of verbosity option for debugging
 #import sounddevice as sd
 #import time
 
@@ -31,24 +30,21 @@ def getClassIDsAndTimes(pathToFile):
         lastEventEndSecond = currentEventEnd
 
     #want last event to end of clip for background noise 
-    clipTimesAndClasses.append((1, lastEventEndSecond, wavLenSeconds))
+    #clipTimesAndClasses.append((1, lastEventEndSecond, wavLenSeconds))
     
-    #TODO add some kind of verbosity print 
-    #print(clipTimesAndClasses)
-
     return clipTimesAndClasses
 
 
 def loadAndCutWav(pathToWav, timesAndClassIDs):
     sampleRate, wavData = wavfile.read(pathToWav)
-    print('File successfully loaded. Dividing .wav into events...')
 
     #https://stackoverflow.com/a/26716031
     #wavfile from scipy reads the data in as a numpy array, but the
     #wav isn't normalized between -1 and 1, so we divide by max int
     #allowed by the number of the .wavs bits of encoding, 16 bits in
     #this case
-    wavData = wavData / (float(2 ** (wavBitsEncoding - 1)) + 1.0)
+    #this gets done for us with the pyAudioExtraction library
+    #wavData = wavData / (float(2 ** (wavBitsEncoding - 1)) + 1.0)
     
     classIDToWavChunks = dict() 
     for classID, startTime, endTime in timesAndClassIDs:
@@ -59,9 +55,6 @@ def loadAndCutWav(pathToWav, timesAndClassIDs):
         else:
             classIDToWavChunks[classID] = [tempWavAudio]
 
-        #TODO: debug option
-        #print(f'Playing audio chunk with classID {classID} to make sure it\'s correct')
-        #print(f'Start: {startTime} End: {endTime} SampleRate: {sampleRate}')
         #sd.play(tempWavAudio, sampleRate)
         #time.sleep(endTime - startTime)
 
@@ -72,13 +65,13 @@ def parseXMLCutWavs(pathToXMLFiles):
     classIDsToWavData = dict()
     for fName in os.listdir(pathToXMLFiles):
         if fName.endswith('.xml'):
-            print(f'Currently Parsing XML file: {fName}...')
+            #print(f'Currently Parsing XML file: {fName}...')
             #list of tuples of (classID, startTime, endTime)
             timesAndClassIDs = getClassIDsAndTimes(os.path.join(pathToXMLFiles, fName))
-
+          
             #grab the actual wav file by dropping the .xml on the file name
             wavFileName = os.path.splitext(fName)[0] + '_1.wav'
-            print(f'Got time stamp and class membership info. Loading {wavFileName}...')
+            #print(f'Got time stamp and class membership info. Loading {wavFileName}...')
        
             #read the .wav and cut it into separate arrays based on the info
             #dict of classID -> list of arrays of .wav Data
@@ -90,8 +83,8 @@ def parseXMLCutWavs(pathToXMLFiles):
                     classIDsToWavData[key].extend(tempIDsToWavData[key])
                 else:
                     classIDsToWavData[key] = tempIDsToWavData[key]
-            print('Finished loading and cutting this .wav...')
-        else: 
-            print(f'Skipping non XML file {fName}...')
+            #print('Finished loading and cutting this .wav...')
+        #else: 
+            #print(f'Skipping non XML file {fName}...')
 
     return classIDsToWavData
