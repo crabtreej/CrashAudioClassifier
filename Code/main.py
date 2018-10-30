@@ -7,27 +7,15 @@ import numpy as np
 #import sounddevice as sd
 import time
 from pyAudioAnalysis import audioFeatureExtraction as fe
+
 pathToData = '../Dataset/crashAudio/audio/'
 
-if __name__ == '__main__':
 
-    classToClipsMapA = parseXMLData.parseXMLCutWavs(pathToData + 'A' + '/')
-    classToClipsMapB = parseXMLData.parseXMLCutWavs(pathToData + 'B' + '/')
-    classToClipsMapC = parseXMLData.parseXMLCutWavs(pathToData + 'C' + '/')
-
-    print('Processed all audio data')
-    sf = 32000
-
-    #100 milliseconds * sample frequency
-    window_size = 0.1 * sf
-    #50% overlap, so 50 milliseconds * sample frequency for step size
-    step_size = 0.05 * sf
-
-
-    classToMFCCsOfClipsA = {}
-    for classID in classToClipsMapA:
-        classToMFCCsOfClipsA[classID] = []
-        for singleEventAudioClip in classToClipsMapA[classID]:
+def getClassIDsToMFCCs(classIDsToClipsMap):
+    classToMFCCsOfClips = {}
+    for classID in classIDsToClipsMap:
+        classToMFCCsOfClips[classID] = []
+        for singleEventAudioClip in classIDsToClipsMap[classID]:
             #this returns a matrix that looks like:
             """
                   zcr   | energy | energy_entropy | .... | mfcc_0 | mfcc_1 | ... | ... |
@@ -53,9 +41,28 @@ if __name__ == '__main__':
                 mfccsForEachWindow.append(mfccsForOneWindow)
 
             #have list that looks like [ [mfcc0, mfcc1, mfcc2...], [mfcc0...], ... ] for each window in one clip
-            classToMFCCsOfClipsA[classID].append(mfccsForEachWindow)
+            classToMFCCsOfClips[classID].append(mfccsForEachWindow)
 
-    #code is hideout but basically
-    #use classToMFCCsOfClipsA, i'll add something in for folds B and C in a bit
+
+if __name__ == '__main__':
+
+    classToClipsMapA = parseXMLData.parseXMLCutWavs(pathToData + 'A' + '/')
+    classToClipsMapB = parseXMLData.parseXMLCutWavs(pathToData + 'B' + '/')
+    classToClipsMapC = parseXMLData.parseXMLCutWavs(pathToData + 'C' + '/')
+
+    print('Processed all audio data')
+    sf = 32000
+
+    #100 milliseconds * sample frequency
+    window_size = 0.1 * sf
+    #50% overlap, so 50 milliseconds * sample frequency for step size
+    step_size = 0.05 * sf
+
+
     #it's a map that maps classID to a list of audio clips, those audio clips have been decomposed into a list of
     #frames, and each of those frames are represented by a list of thirteen MFCCs, so it's a list of lists of lists
+    classToMFCCsMapA = getClassIDsToMFCCs(classToClipsMapA)
+    classToMFCCsMapB = getClassIDsToMFCCs(classToClipsMapB)
+    classToMFCCsMapC = getClassIDsToMFCCs(classToClipsMapC)
+
+    #put these into KMeans now?
