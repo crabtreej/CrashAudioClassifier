@@ -65,16 +65,12 @@ if __name__ == '__main__':
     classToMFCCsMapA = getClassIDsToMFCCs(classToClipsMapA)
     classToMFCCsMapB = getClassIDsToMFCCs(classToClipsMapB)
     classToMFCCsMapC = getClassIDsToMFCCs(classToClipsMapC)
-    
-    print(classToMFCCsMapA)
-    print(classToMFCCsMapB)
-    print(classToMFCCsMapC)
 
     comboList = []
     for classID in classToMFCCsMapA:
-        for frame in classID:
+        for frame in classToMFCCsMapA[classID]:
             for MFCC in frame:
-                comboList.append[MFCC]
+                comboList.append(MFCC)
 
     #KMeans clustering of combo list
     kmeans = KMeans(n_clusters=64).fit(comboList)
@@ -82,7 +78,7 @@ if __name__ == '__main__':
     #KMeans predict on each MFCC now, get predicted label 
     predictedLabels = []
     for classID in classToMFCCsMapA:
-        for frame in classID:
+        for frame in classToMFCCsMapA[classID]:
             for MFCC in frame:
                 prediction = kmeans.predict(MFCC) #returns 0-63
                 predictedLabels[prediction] += 1 #increment index at index 
