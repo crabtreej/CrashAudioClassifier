@@ -12,6 +12,7 @@ sounddevice = "*"
 librosa = "*"
 "eyed3" = "*"
 pydub = "*"
+libmagic = "*"
 
 [dev-packages]
 

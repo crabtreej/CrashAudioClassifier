@@ -1,6 +1,6 @@
 import sys
 import parseXMLData
-import convertToFrames
+from sklearn.cluster import KMeans
 from scipy import signal
 import matplotlib.pyplot as plt
 import numpy as np
