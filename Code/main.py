@@ -42,6 +42,7 @@ def getClassIDsToMFCCs(classIDsToClipsMap):
 
             #have list that looks like [ [mfcc0, mfcc1, mfcc2...], [mfcc0...], ... ] for each window in one clip
             classToMFCCsOfClips[classID].append(mfccsForEachWindow)
+            return classToMFCCsOfClips
 
 
 if __name__ == '__main__':
@@ -68,7 +69,7 @@ if __name__ == '__main__':
     print(classToMFCCsMapA)
     print(classToMFCCsMapB)
     print(classToMFCCsMapC)
-    
+
     comboList = []
     for classID in classToMFCCsMapA:
         for frame in classID:
