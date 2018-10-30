@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d775255c15e2af526fbfbac50901e183ed490211b543ab9c4dfea16f8df3b150"
+            "sha256": "f90889ad23eb5cc6c128a7c7021ec2ba5f25d3fe396cf48ef2135f4dac62e7cf"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -120,6 +120,13 @@
                 "sha256:f923406e6b32c86309261b8195e24e18b6a8801df0cfc7814ac44017bfcb3939"
             ],
             "version": "==1.0.1"
+        },
+        "libmagic": {
+            "hashes": [
+                "sha256:649f1ce7fb7c92796badbb812555e4a926351da4f5cdf82e810b5cd371aedf8d"
+            ],
+            "index": "pypi",
+            "version": "==1.0"
         },
         "librosa": {
             "hashes": [
