@@ -66,15 +66,19 @@ if __name__ == '__main__':
     classToClipsAsFramesOfMFCCsMapA = getClassIDsToClipFramesMFCCs(classToClipsMapA)
     classToClipsAsFramesOfMFCCsMapB = getClassIDsToClipFramesMFCCs(classToClipsMapB)
     classToClipsAsFramesOfMFCCsMapC = getClassIDsToClipFramesMFCCs(classToClipsMapC)
+    MFCCsMapList = []
+    MFCCsMapList.append(classToClipsAsFramesOfMFCCsMapA)
+    MFCCsMapList.append(classToClipsAsFramesOfMFCCsMapB)
 
     comboList = []
-    for classID in classToClipsAsFramesOfMFCCsMapA:
-        #there are a certain amount of clips keyed to each class
-        for clip in classToClipsAsFramesOfMFCCsMapA[classID]:
-            #a clip is an array of frames
-            for frame in clip:
-                #a frame is an array of 13 mfccs
-                comboList.append(frame)
+    for MFCCsMap in MFCCsMapList:
+        for classID in MFCCsMap:
+            #there are a certain amount of clips keyed to each class
+            for clip in MFCCsMap[classID]:
+                #a clip is an array of frames
+                for frame in clip:
+                    #a frame is an array of 13 mfccs
+                    comboList.append(frame)
 
     # KMeans clustering of combo list
     kmeans = KMeans(n_clusters=64).fit(comboList)
@@ -86,8 +90,5 @@ if __name__ == '__main__':
             prediction = kmeans.predict(clip)
             for frame in prediction:
                 predictedLabels[frame] += 1
-                print(predictedLabels)
             
-
-    # Now we have an array with predicted clusters for each MFCC
  
