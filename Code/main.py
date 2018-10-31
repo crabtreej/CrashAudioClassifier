@@ -67,15 +67,19 @@ if __name__ == '__main__':
     classToClipsAsFramesOfMFCCsMapA = getClassIDsToClipFramesMFCCs(classToClipsMapA)
     classToClipsAsFramesOfMFCCsMapB = getClassIDsToClipFramesMFCCs(classToClipsMapB)
     classToClipsAsFramesOfMFCCsMapC = getClassIDsToClipFramesMFCCs(classToClipsMapC)
+    MFCCsMapList = []
+    MFCCsMapList.append(classToClipsAsFramesOfMFCCsMapA)
+    MFCCsMapList.append(classToClipsAsFramesOfMFCCsMapB)
 
     comboList = []
-    for classID in classToClipsAsFramesOfMFCCsMapA:
-        #there are a certain amount of clips keyed to each class
-        for clip in classToClipsAsFramesOfMFCCsMapA[classID]:
-            #a clip is an array of frames
-            for frame in clip:
-                #a frame is an array of 13 mfccs
-                comboList.append(frame)
+    for MFCCsMap in MFCCsMapList:
+        for classID in MFCCsMap:
+            #there are a certain amount of clips keyed to each class
+            for clip in MFCCsMap[classID]:
+                #a clip is an array of frames
+                for frame in clip:
+                    #a frame is an array of 13 mfccs
+                    comboList.append(frame)
 
     # KMeans clustering of combo list
     kmeans = KMeans(n_clusters=128).fit(comboList)
@@ -94,7 +98,7 @@ if __name__ == '__main__':
 
     print(histograms)
     print(classMembership)   
- 
+            
     #now we have training data for an svm
     mySVM = SVC(gamma='auto')
     mySVM.fit(histograms[::2], classMembership[::2])
