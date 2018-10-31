@@ -1,6 +1,7 @@
 import sys
 import parseXMLData
 from sklearn.cluster import KMeans
+from sklearn.svm import SVC
 from scipy import signal
 import matplotlib.pyplot as plt
 import numpy as np
@@ -77,17 +78,36 @@ if __name__ == '__main__':
                 comboList.append(frame)
 
     # KMeans clustering of combo list
-    kmeans = KMeans(n_clusters=64).fit(comboList)
+    kmeans = KMeans(n_clusters=128).fit(comboList)
 
     # KMeans predict on each clip now, get predicted label
-    predictedLabels = [0] * 64
+    histograms = []
+    classMembership = []
     for classID in classToClipsAsFramesOfMFCCsMapA:
         for clip in classToClipsAsFramesOfMFCCsMapA[classID]:
+            predictedLabels = [0] * 128 
             prediction = kmeans.predict(clip)
             for frame in prediction:
                 predictedLabels[frame] += 1
-                print(predictedLabels)
-            
+            histograms.append(predictedLabels)
+            classMembership.append(classID)
 
-    # Now we have an array with predicted clusters for each MFCC
+    print(histograms)
+    print(classMembership)   
  
+    #now we have training data for an svm
+    mySVM = SVC(gamma='auto')
+    mySVM.fit(histograms[::2], classMembership[::2])
+    print(mySVM.score(histograms[1::2], classMembership[1::2]))
+
+
+
+
+
+
+
+
+
+
+
+
