@@ -47,6 +47,19 @@ def getClassIDsToClipFramesMFCCs(classIDsToClipsMap):
 
     return classToMFCCsOfClips
 
+def getHistogramsAndMembershipFromKMeans(kmeansCLF, classToClipsMFCCsMap):
+    histograms = []
+    classMembership = []
+    for classID in classToClipsMFCCsMap:
+        for clip in classToClipsMFCCsMap[classID]:
+            predictedLabels = [0] * 64
+            prediction = kmeans.predict(clip)
+            for frame in prediction:
+                predictedLabels[frame] += 1
+            histograms.append(predictedLabels)
+            classMembership.append(classID)
+
+    return (histograms, classMembership)
 
 if __name__ == '__main__':
 
@@ -85,24 +98,20 @@ if __name__ == '__main__':
     kmeans = KMeans(n_clusters=64).fit(comboList)
 
     # KMeans predict on each clip now, get predicted label
-    histograms = []
-    classMembership = []
-    for classID in classToClipsAsFramesOfMFCCsMapC:
-        for clip in classToClipsAsFramesOfMFCCsMapC[classID]:
-            predictedLabels = [0] * 128 
-            prediction = kmeans.predict(clip)
-            for frame in prediction:
-                predictedLabels[frame] += 1
-            histograms.append(predictedLabels)
-            classMembership.append(classID)
+    trainingHistograms, trainingLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapA)
+    tempHist, tempLabels = (getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapB))
+    trainingHistograms.extend(tempHist)
+    trainingLabels.extend(tempLabels)
 
-    print(histograms)
-    print(classMembership)   
-            
+    validationHistograms, validationLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapC)
+
+    print(trainingHistograms)
+    print(trainingLabels)
+
     #now we have training data for an svm
     mySVM = SVC(gamma='auto')
-    mySVM.fit(histograms[::2], classMembership[::2])
-    print(mySVM.score(histograms[1::2], classMembership[1::2]))
+    mySVM.fit(trainingHistograms, trainingLabels)
+    print(mySVM.score(validationHistograms, validationLabels))
 
 
 
