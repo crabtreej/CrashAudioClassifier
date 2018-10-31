@@ -82,13 +82,13 @@ if __name__ == '__main__':
                     comboList.append(frame)
 
     # KMeans clustering of combo list
-    kmeans = KMeans(n_clusters=128).fit(comboList)
+    kmeans = KMeans(n_clusters=64).fit(comboList)
 
     # KMeans predict on each clip now, get predicted label
     histograms = []
     classMembership = []
-    for classID in classToClipsAsFramesOfMFCCsMapA:
-        for clip in classToClipsAsFramesOfMFCCsMapA[classID]:
+    for classID in classToClipsAsFramesOfMFCCsMapC:
+        for clip in classToClipsAsFramesOfMFCCsMapC[classID]:
             predictedLabels = [0] * 128 
             prediction = kmeans.predict(clip)
             for frame in prediction:
