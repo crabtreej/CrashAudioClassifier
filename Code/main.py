@@ -11,7 +11,7 @@ from pyAudioAnalysis import audioFeatureExtraction as fe
 pathToData = '../Dataset/crashAudio/audio/'
 
 
-def getClassIDsToMFCCs(classIDsToClipsMap):
+def getClassIDsToClipFramesMFCCs(classIDsToClipsMap):
     classToMFCCsOfClips = {}
     for classID in classIDsToClipsMap:
         classToMFCCsOfClips[classID] = []
@@ -43,7 +43,8 @@ def getClassIDsToMFCCs(classIDsToClipsMap):
 
             # have list that looks like [ [mfcc0, mfcc1, mfcc2...], [mfcc0...], ... ] for each window in one clip
             classToMFCCsOfClips[classID].append(mfccsForEachWindow)
-            return classToMFCCsOfClips
+
+    return classToMFCCsOfClips
 
 
 if __name__ == '__main__':
@@ -62,30 +63,29 @@ if __name__ == '__main__':
 
     # it's a map that maps classID to a list of audio clips, those audio clips have been decomposed into a list of
     # frames, and each of those frames are represented by a list of thirteen MFCCs, so it's a list of lists of lists
-    classToMFCCsMapA = getClassIDsToMFCCs(classToClipsMapA)
-    classToMFCCsMapB = getClassIDsToMFCCs(classToClipsMapB)
-    classToMFCCsMapC = getClassIDsToMFCCs(classToClipsMapC)
-    temp = []
-    temp.append(classToMFCCsMapA)
-    temp.append(classToMFCCsMapB)
-    temp.append(classToMFCCsMapC)
+    classToClipsAsFramesOfMFCCsMapA = getClassIDsToClipFramesMFCCs(classToClipsMapA)
+    classToClipsAsFramesOfMFCCsMapB = getClassIDsToClipFramesMFCCs(classToClipsMapB)
+    classToClipsAsFramesOfMFCCsMapC = getClassIDsToClipFramesMFCCs(classToClipsMapC)
 
     comboList = []
-    for classID in classToMFCCsMapA:
-        for frame in classToMFCCsMapA[classID]:
-            for MFCC in frame:
-                comboList.append(MFCC)
+    for classID in classToClipsAsFramesOfMFCCsMapA:
+        #there are a certain amount of clips keyed to each class
+        for clip in classToClipsAsFramesOfMFCCsMapA[classID]:
+            #a clip is an array of frames
+            for frame in clip:
+                #a frame is an array of 13 mfccs
+                comboList.append(frame)
 
     # KMeans clustering of combo list
     kmeans = KMeans(n_clusters=64).fit(comboList)
-    print(kmeans.labels_)
+    #print(kmeans.labels_)
 
     # KMeans predict on each MFCC now, get predicted label
     predictedLabels = []
-    for classID in classToMFCCsMapA:
-        for frame in classToMFCCsMapA[classID]:
-            prediction = kmeans.predict(frame)
-            print(prediction)
+    for classID in classToClipsAsFramesOfMFCCsMapA:
+        for clip in classToClipsAsFramesOfMFCCsMapA[classID]:
+            prediction = kmeans.predict(clip)
+            #print(prediction)
 
-# Now we have an array with predicted clusters for each MFCC
+    # Now we have an array with predicted clusters for each MFCC
  
