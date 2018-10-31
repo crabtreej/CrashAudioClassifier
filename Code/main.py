@@ -78,14 +78,16 @@ if __name__ == '__main__':
 
     # KMeans clustering of combo list
     kmeans = KMeans(n_clusters=64).fit(comboList)
-    #print(kmeans.labels_)
 
-    # KMeans predict on each MFCC now, get predicted label
-    predictedLabels = []
+    # KMeans predict on each clip now, get predicted label
+    predictedLabels = [0] * 64
     for classID in classToClipsAsFramesOfMFCCsMapA:
         for clip in classToClipsAsFramesOfMFCCsMapA[classID]:
             prediction = kmeans.predict(clip)
-            #print(prediction)
+            for frame in prediction:
+                predictedLabels[frame] += 1
+                print(predictedLabels)
+            
 
     # Now we have an array with predicted clusters for each MFCC
  
