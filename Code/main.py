@@ -1,11 +1,11 @@
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV
 import pickle
 from sklearn.cluster import KMeans
-from sklearn.svm import SVC, LinearSVC
+from sklearn.svm import SVC #, LinearSVC
 import numpy as np
-from pyAudioAnalysis import audioFeatureExtraction as fe
+#from pyAudioAnalysis import audioFeatureExtraction as fe
 from sklearn.metrics import classification_report
-from scipy.stats import norm
+import matplotlib.pyplot as plt
 
 def getHistogramsAndMembershipFromKMeans(kmeansCLF, classToClipsMFCCsMap):
     histograms = []
@@ -57,9 +57,12 @@ def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationH
     print(classification_report(y_true, y_pred))
     print()
 
+    recognition_rate = 0.0
+    for true, pred in zip(y_true, y_pred)
+        if true == pred:
+            recognition_rate += 1.0
 
-
-    return clf.best_params_
+    return (clf.best_params_, recognition_rate / len(true))
 
 def findBestParamForLinearSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels):
 
@@ -170,4 +173,13 @@ if __name__ == '__main__':
     print(f'Best Gamma was: {bestGamma}')
     print(f'Best Kernel was: {bestKernel}')
 
+    plt.title('Accuracy vs. KMeans Clusters')
+    plt.xlabel('Clusters')
+    plt.ylabel('Accuracy')
+    plt.ylim('0.0, 100.0')
+    kmeansSizes = [64, 128, 256, 512, 1024]
+    plt.plot(kmeansSizes, [recognitionRate] * 5)
+
+    plt.show()
+    
 
