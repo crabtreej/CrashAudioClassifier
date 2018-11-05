@@ -26,8 +26,8 @@ def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationH
     c_value = '' 
     param_values = ''
 
-    c_values = [5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12,12.5,13,13.5,14,14.5,15,20,25,30,35,40,45,50]
-    gamma_values = [.0001,.0002,.0003,.0004,.0005,.0006,.0007,.0008,.0009,.001,.005,.0075,.01,.05,.075,.10,.50,.75,1.0]
+    c_values = [.50,.75,1,1.25,1.5,1.75,2,2.25,2.5,2.75,3,3.25,3.5,3.75,4]
+    gamma_values = [.0003,.0004,.0005,.0006,.0007,.0008,.0009,.001]
  
     param_grid = [
         {'C': c_values, 'gamma': gamma_values, 'kernel': ['rbf']},
@@ -116,6 +116,8 @@ if __name__ == '__main__':
         classToClipsAsFramesOfMFCCsMapB = pickle.load(fp)
     with open("classToClipsAsFramesOfMFCCsMapC.txt", "rb") as fp:
         classToClipsAsFramesOfMFCCsMapC = pickle.load(fp)
+    with open("classToClipsAsFramesOfMFCCsMapD.txt", "rb") as fp:
+        classToClipsAsFramesOfMFCCsMapD = pickle.load(fp)
     
     MFCCsMapList = []
     MFCCsMapList.append(classToClipsAsFramesOfMFCCsMapA)
@@ -140,7 +142,9 @@ if __name__ == '__main__':
     trainingHistograms.extend(tempHist)
     trainingLabels.extend(tempLabels)
 
+
     validationHistograms, validationLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapC)
+    testingHistograms, testingLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapD)
 
     #now we have training data for an svm
    
