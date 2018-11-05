@@ -27,8 +27,8 @@ def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationH
     param_values = ''
 
     param_grid = [
-    {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
-    {'C': [1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
+        {'C': [0.01, 1, 10, 100, 1000], 'kernel': ['linear']},
+        {'C': [0.01, 1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
     ]
 
     clf = GridSearchCV(SVC(max_iter=10000), param_grid, cv=3, scoring='accuracy')
@@ -127,9 +127,7 @@ if __name__ == '__main__':
     #If you run this code, you'll find that the best parameter for a LinearSVC for this data is
     #0.00999999... = 0.01. I tried values much smaller that that, and up to 10^7 for the C parameter,
     #and 0.01 is the best. This just averages the values found over a large number of iterations in an
-    #attempt to remove any variance from it.
-    #bestC = 0
-    #for i in range(0, 1000): 
-    #    bestC = bestC + findBestParamForLinearSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
-    #bestC = bestC / 1000.0
-    #print(f'Best C from averaging was: {bestC}')
+    #attempt to remove any variance from it. 
+    bestDict = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
+    #bestC = bestC / 50.0
+    print(f'Best C from averaging was: {bestDict}')
