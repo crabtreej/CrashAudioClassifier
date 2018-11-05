@@ -26,13 +26,15 @@ def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationH
     c_value = '' 
     param_values = ''
 
+    c_values = [5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12,12.5,13,13.5,14,14.5,15]
+    gamma_values = [.00005, .00006,.00007,.00008,.00009,.0001,.0002,.0003,.0004,.0005]
+ 
     param_grid = [
-        {'C': [0.001, 0.01, 1, 10, 100, 500, 1000, 100000, 1000000], 'kernel': ['linear']},
-        {'C': [0.001, 0.01, 1, 10, 100, 500, 1000, 100000, 1000000], 'gamma': [3, 5, 20, 100, 0.1, 0.01, 0.001, 0.0001], 'kernel': ['rbf']},
+        {'C': c_values, 'kernel': ['linear']},
+        {'C': c_values, 'gamma': gamma_values, 'kernel': ['rbf']},
     ]
 
     clf = GridSearchCV(SVC(max_iter=10000), param_grid, cv=3, scoring='accuracy')
-
     clf.fit(trainingHistograms, trainingLabels)
 
     print("Best parameters set found on development set:")
