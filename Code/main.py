@@ -33,7 +33,7 @@ def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationH
         {'C': c_values, 'gamma': gamma_values, 'kernel': ['rbf']},
     ]
 
-    clf = GridSearchCV(SVC(max_iter=10000), param_grid, cv=10, scoring='accuracy')
+    clf = GridSearchCV(SVC(max_iter=1000), param_grid, cv=10, scoring='accuracy')
     clf.fit(trainingHistograms, trainingLabels)
 
     print("Best parameters set found on development set:")
@@ -59,11 +59,11 @@ def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationH
     print()
 
     recognition_rate = 0.0
-    for true, pred in zip(y_true, y_pred)
+    for true, pred in zip(y_true, y_pred):
         if true == pred:
             recognition_rate += 1.0
 
-    return (clf.best_params_, recognition_rate / len(true))
+    return (clf.best_params_, recognition_rate / len(y_true))
 
 def findBestParamForLinearSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels):
 
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     bestGamma = 0
     countRBF = 0
     countLinear = 0
-    tempDict = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
+    tempDict, recRate = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
     
     print("Best C from averaging was: " + str(tempDict['C']))
     print("Best Gamma was: " + str(tempDict['gamma']))
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     plt.ylabel('Accuracy')
     plt.ylim('0.0, 100.0')
     kmeansSizes = [64, 128, 256, 512, 1024]
-    plt.plot(kmeansSizes, [recognitionRate] * 5)
+    plt.plot(kmeansSizes, [recRate] * 5)
 
     plt.show()
     
