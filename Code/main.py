@@ -26,15 +26,14 @@ def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationH
     c_value = '' 
     param_values = ''
 
-    c_values = [5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12,12.5,13,13.5,14,14.5,15]
-    gamma_values = [.00005, .00006,.00007,.00008,.00009,.0001,.0002,.0003,.0004,.0005]
+    c_values = [5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12,12.5,13,13.5,14,14.5,15,20,25,30,35,40,45,50]
+    gamma_values = [.0001,.0002,.0003,.0004,.0005,.0006,.0007,.0008,.0009,.001,.005,.0075,.01,.05,.075,.10,.50,.75,1.0]
  
     param_grid = [
-        {'C': c_values, 'kernel': ['linear']},
         {'C': c_values, 'gamma': gamma_values, 'kernel': ['rbf']},
     ]
 
-    clf = GridSearchCV(SVC(max_iter=10000), param_grid, cv=3, scoring='accuracy')
+    clf = GridSearchCV(SVC(max_iter=10000), param_grid, cv=10, scoring='accuracy')
     clf.fit(trainingHistograms, trainingLabels)
 
     print("Best parameters set found on development set:")
@@ -151,23 +150,10 @@ if __name__ == '__main__':
     bestGamma = 0
     countRBF = 0
     countLinear = 0
-    for i in range (0, 20):
-        tempDict = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
-        bestC += tempDict['C']
-        bestGamma += tempDict['gamma']
-        if(tempDict['kernel'] == 'rbf'):
-            countRBF += 1
-        else:
-            countLinear += 1
-
-    bestC = bestC / 20.0
-    bestGamma = bestGamma / 20.0
-    bestKernel = 'rbf'
-    if countRBF < countLinear:
-        bestKernel = 'linear'
-
-    print(f'Best C from averaging was: {bestC}')
-    print(f'Best Gamma was: {bestGamma}')
-    print(f'Best Kernel was: {bestKernel}')
+    tempDict = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
+    
+    print("Best C from averaging was: " + str(tempDict['C']))
+    print("Best Gamma was: " + str(tempDict['gamma']))
+    print("Best Kernel was: " + str(tempDict['kernel']))
 
 
