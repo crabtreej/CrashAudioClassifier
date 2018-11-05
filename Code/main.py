@@ -20,6 +20,28 @@ def getHistogramsAndMembershipFromKMeans(kmeansCLF, classToClipsMFCCsMap):
             classMembership.append(classID)
 
     return (histograms, classMembership)
+    
+def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels):
+
+    c_value = '' 
+    param_values = ''
+
+    param_grid = [
+    {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
+    {'C': [1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
+    ]
+
+    clf = GridSearchCV(SVC(max_iter=10000), param_grid, cv=3, scoring='accuracy')
+
+    clf.fit(trainingHistograms, trainingLabels)
+
+    y_true, y_pred = validationLabels, clf.predict(validationHistograms)
+
+    return clf.best_params_
+
+
+
+
 
 def findBestParamForLinearSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels):
 
@@ -36,7 +58,7 @@ def findBestParamForLinearSVClassifier(trainingHistograms, trainingLabels, valid
             c_value = input()
             if c_value != '':
                 c_values.append(float(c_value))
-    clf = GridSearchCV(LinearSVC(max_iter=10000), {'C': c_values}, cv=3, scoring='accuracy')
+    clf = GridSearchCV(SVC(max_iter=10000), {'C': c_values}, cv=3, scoring='accuracy')
 
     clf.fit(trainingHistograms, trainingLabels)
 
