@@ -27,21 +27,39 @@ def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationH
     param_values = ''
 
     param_grid = [
-        {'C': [0.01, 1, 10, 100, 1000], 'kernel': ['linear']},
-        {'C': [0.01, 1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
+        {'C': [0.001, 0.01, 1, 10, 100, 500, 1000, 100000, 1000000], 'kernel': ['linear']},
+        {'C': [0.001, 0.01, 1, 10, 100, 500, 1000, 100000, 1000000], 'gamma': [3, 5, 20, 100, 0.1, 0.01, 0.001, 0.0001], 'kernel': ['rbf']},
     ]
 
     clf = GridSearchCV(SVC(max_iter=10000), param_grid, cv=3, scoring='accuracy')
 
     clf.fit(trainingHistograms, trainingLabels)
 
+    print("Best parameters set found on development set:")
+    print()
+    print(clf.best_params_)
+    print()
+    print("Grid scores on development set:")
+    print()
+    means = clf.cv_results_['mean_test_score']
+    stds = clf.cv_results_['std_test_score']
+    for mean, std, params in zip(means, stds, clf.cv_results_['params']):
+        print("%0.3f (+/-%0.03f) for %r"
+              % (mean, std * 2, params))
+    print()
+
+    print("Detailed classification report:")
+    print()
+    print("The model is trained on the full development set.")
+    print("The scores are computed on the full evaluation set.")
+
     y_true, y_pred = validationLabels, clf.predict(validationHistograms)
+    print(classification_report(y_true, y_pred))
+    print()
+
+
 
     return clf.best_params_
-
-
-
-
 
 def findBestParamForLinearSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels):
 
@@ -128,6 +146,28 @@ if __name__ == '__main__':
     #0.00999999... = 0.01. I tried values much smaller that that, and up to 10^7 for the C parameter,
     #and 0.01 is the best. This just averages the values found over a large number of iterations in an
     #attempt to remove any variance from it. 
-    bestDict = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
-    #bestC = bestC / 50.0
-    print(f'Best C from averaging was: {bestDict}')
+   
+    bestC = 0
+    bestGamma = 0
+    countRBF = 0
+    countLinear = 0
+    for i in range (0, 20):
+        tempDict = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
+        bestC += tempDict['C']
+        bestGamma += tempDict['gamma']
+        if(tempDict['kernel'] == 'rbf'):
+            countRBF += 1
+        else:
+            countLinear += 1
+
+    bestC = bestC / 20.0
+    bestGamma = bestGamma / 20.0
+    bestKernel = 'rbf'
+    if countRBF < countLinear:
+        bestKernel = 'linear'
+
+    print(f'Best C from averaging was: {bestC}')
+    print(f'Best Gamma was: {bestGamma}')
+    print(f'Best Kernel was: {bestKernel}')
+
+

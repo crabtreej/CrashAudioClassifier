@@ -1,0 +1,37 @@
+Detailed classification report:
+
+The model is trained on the full development set.
+The scores are computed on the full evaluation set.
+              precision    recall  f1-score   support
+
+           1       0.96      0.98      0.97       100
+           2       1.00      0.76      0.86        50
+           3       0.77      0.92      0.84        50
+
+   micro avg       0.91      0.91      0.91       200
+   macro avg       0.91      0.89      0.89       200
+weighted avg       0.92      0.91      0.91       200
+
+Best C from averaging was: {'C': 10, 'gamma': 0.0001, 'kernel': 'rbf'}
+
+
+best so far from averaging:
+Detailed classification report:
+
+The model is trained on the full development set.
+The scores are computed on the full evaluation set.
+              precision    recall  f1-score   support
+
+           1       0.96      0.96      0.96       100
+           2       1.00      0.72      0.84        50
+           3       0.72      0.92      0.81        50
+
+   micro avg       0.89      0.89      0.89       200
+   macro avg       0.89      0.87      0.87       200
+weighted avg       0.91      0.89      0.89       200
+
+
+Best C from averaging was: 100.0
+Best Gamma was: 0.00010000000000000002
+Best Kernel was: rbf
+
