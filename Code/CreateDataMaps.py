@@ -31,6 +31,7 @@ def getClassIDsToClipFramesMFCCs(classIDsToClipsMap):
             # so featuresMatrix[0] = a list of the zcr for each window, and featuresMatrix[0][0]
             # would be the zcr for the very first window
             # we care about featuresMatrix[8:20] for the 13 MFCCs
+
             featuresMatrix, featureNames = fe.stFeatureExtraction(
                 singleEventAudioClip, sf, window_size, step_size)
             mfccsForEachWindow = []
@@ -52,25 +53,36 @@ if __name__ == '__main__':
     classToClipsMapA = parseXMLData.parseXMLCutWavs(pathToData + 'A' + '/')
     classToClipsMapB = parseXMLData.parseXMLCutWavs(pathToData + 'B' + '/')
     classToClipsMapC = parseXMLData.parseXMLCutWavs(pathToData + 'C' + '/')
+    classToClipsMapD = parseXMLData.parseXMLCutWavs(pathToData + 'D' + '/')
 
     print('Processed all audio data')
     sf = 32000
 
     # 100 milliseconds * sample frequency
     window_size = 0.1 * sf
+    window_sizes = [(.1 * sf), (.3 * sf)]
     # 50% overlap, so 50 milliseconds * sample frequency for step size
     step_size = 0.05 * sf
 
     # it's a map that maps classID to a list of audio clips, those audio clips have been decomposed into a list of
     # frames, and each of those frames are represented by a list of thirteen MFCCs, so it's a list of lists of lists
-    classToClipsAsFramesOfMFCCsMapA = getClassIDsToClipFramesMFCCs(classToClipsMapA)
-    classToClipsAsFramesOfMFCCsMapB = getClassIDsToClipFramesMFCCs(classToClipsMapB)
-    classToClipsAsFramesOfMFCCsMapC = getClassIDsToClipFramesMFCCs(classToClipsMapC)
+    
+    suffixes = ["100m", "300m"]
+    i = 0
+    for w in window_sizes:
+        window_size = w
+        classToClipsAsFramesOfMFCCsMapA = getClassIDsToClipFramesMFCCs(classToClipsMapA)
+        classToClipsAsFramesOfMFCCsMapB = getClassIDsToClipFramesMFCCs(classToClipsMapB)
+        classToClipsAsFramesOfMFCCsMapC = getClassIDsToClipFramesMFCCs(classToClipsMapC)
+        classToClipsAsFramesOfMFCCsMapD = getClassIDsToClipFramesMFCCs(classToClipsMapD)
 
-    with open("classToClipsAsFramesOfMFCCsMapA.txt", "wb") as fp:
-        pickle.dump(classToClipsAsFramesOfMFCCsMapA, fp)
-    with open("classToClipsAsFramesOfMFCCsMapB.txt", "wb") as fp:
-        pickle.dump(classToClipsAsFramesOfMFCCsMapB, fp)
-    with open("classToClipsAsFramesOfMFCCsMapC.txt", "wb") as fp:
-        pickle.dump(classToClipsAsFramesOfMFCCsMapC, fp)
+        with open("classToClipsAsFramesOfMFCCsMapA_" + suffixes[i] + ".txt", "wb") as fp:
+            pickle.dump(classToClipsAsFramesOfMFCCsMapA, fp)
+        with open("classToClipsAsFramesOfMFCCsMapB_" + suffixes[i] + ".txt", "wb") as fp:
+            pickle.dump(classToClipsAsFramesOfMFCCsMapB, fp)
+        with open("classToClipsAsFramesOfMFCCsMapC_" + suffixes[i] + ".txt", "wb") as fp:
+            pickle.dump(classToClipsAsFramesOfMFCCsMapC, fp)
+        with open("classToClipsAsFramesOfMFCCsMapD_" + suffixes[i] + ".txt", "wb") as fp:
+            pickle.dump(classToClipsAsFramesOfMFCCsMapD, fp)
+        i = i + 1
         
