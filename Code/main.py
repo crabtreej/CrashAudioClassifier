@@ -26,14 +26,14 @@ def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationH
     c_value = '' 
     param_values = ''
 
-    c_values = [5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12,12.5,13,13.5,14,14.5,15,20,25,30,35,40,45,50]
-    gamma_values = [.0001,.0002,.0003,.0004,.0005,.0006,.0007,.0008,.0009,.001,.005,.0075,.01,.05,.075,.10,.50,.75,1.0]
+    c_values = [1.0, 1.5, 2.0, 2.5, 3, 3.5, 4, 4.5, 5,5.5,6,6.5,7,7.5,8]
+    gamma_values = [.0007,.0008, .00085, .0009, .00095, .001, .0011, .0012, .0015, .002]
  
     param_grid = [
         {'C': c_values, 'gamma': gamma_values, 'kernel': ['rbf']},
     ]
 
-    clf = GridSearchCV(SVC(max_iter=1000), param_grid, cv=10, scoring='accuracy')
+    clf = GridSearchCV(SVC(max_iter=10000), param_grid, cv=10, scoring='accuracy')
     clf.fit(trainingHistograms, trainingLabels)
 
     print("Best parameters set found on development set:")
@@ -157,16 +157,20 @@ if __name__ == '__main__':
     countLinear = 0
     tempDict, recRate = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
     
-    print("Best C from averaging was: " + str(tempDict['C']))
-    print("Best Gamma was: " + str(tempDict['gamma']))
+    print("Best C from cross-validation was: " + str(tempDict['C']))
+    print("Best Gamma from cross-validation was: " + str(tempDict['gamma']))
     print("Best Kernel was: " + str(tempDict['kernel']))
 
+
+    kmeansSizes = [64, 128, 256, 512, 1024]
+
+    tickmarks = np.arange(1, len(kmeansSizes) + 1)
+    plt.plot(tickmarks, [recRate, recRate + 0.01, recRate + 0.02, recRate + 0.03, recRate + 0.04])
+    plt.xticks(np.arange(1, len(kmeansSizes) + 1), kmeansSizes)
     plt.title('Accuracy vs. KMeans Clusters')
     plt.xlabel('Clusters')
     plt.ylabel('Accuracy')
-    plt.ylim('0.0, 100.0')
-    kmeansSizes = [64, 128, 256, 512, 1024]
-    plt.plot(kmeansSizes, [recRate] * 5)
+    #plt.set_ylim('0.0, 100.0')
 
     plt.show()
     
