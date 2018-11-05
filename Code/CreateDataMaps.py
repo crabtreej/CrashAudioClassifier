@@ -60,14 +60,14 @@ if __name__ == '__main__':
 
     # 100 milliseconds * sample frequency
     window_size = 0.1 * sf
-    window_sizes = [(.1 * sf), (.3 * sf)]
+    window_sizes = [(.05 * sf), (.1 * sf), (.3 * sf)]
     # 50% overlap, so 50 milliseconds * sample frequency for step size
     step_size = 0.05 * sf
 
     # it's a map that maps classID to a list of audio clips, those audio clips have been decomposed into a list of
     # frames, and each of those frames are represented by a list of thirteen MFCCs, so it's a list of lists of lists
     
-    suffixes = ["100m", "300m"]
+    suffixes = ["50m", "100m", "300m"]
     i = 0
     for w in window_sizes:
         window_size = w
