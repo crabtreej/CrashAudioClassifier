@@ -7,12 +7,12 @@ import numpy as np
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
 
-def getHistogramsAndMembershipFromKMeans(kmeansCLF, classToClipsMFCCsMap):
+def getHistogramsAndMembershipFromKMeans(kmeansCLF, classToClipsMFCCsMap, numMeans):
     histograms = []
     classMembership = []
     for classID in classToClipsMFCCsMap:
         for clip in classToClipsMFCCsMap[classID]:
-            predictedLabels = [0] * 64
+            predictedLabels = [0] * numMeans 
             prediction = kmeans.predict(clip)
             for frame in prediction:
                 predictedLabels[frame] += 1
@@ -40,14 +40,14 @@ def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationH
     print()
     print(clf.best_params_)
     print()
-    print("Grid scores on development set:")
-    print()
-    means = clf.cv_results_['mean_test_score']
-    stds = clf.cv_results_['std_test_score']
-    for mean, std, params in zip(means, stds, clf.cv_results_['params']):
-        print("%0.3f (+/-%0.03f) for %r"
-              % (mean, std * 2, params))
-    print()
+    #print("Grid scores on development set:")
+    #print()
+    #means = clf.cv_results_['mean_test_score']
+    #stds = clf.cv_results_['std_test_score']
+    #for mean, std, params in zip(means, stds, clf.cv_results_['params']):
+    #    print("%0.3f (+/-%0.03f) for %r"
+    #          % (mean, std * 2, params))
+    #print()
 
     print("Detailed classification report:")
     print()
@@ -80,7 +80,7 @@ def findBestParamForLinearSVClassifier(trainingHistograms, trainingLabels, valid
             c_value = input()
             if c_value != '':
                 c_values.append(float(c_value))
-    clf = GridSearchCV(SVC(max_iter=10000), {'C': c_values}, cv=3, scoring='accuracy')
+    clf = GridSearchCV(SVC(max_iter=100), {'C': c_values}, cv=3, scoring='accuracy')
 
     clf.fit(trainingHistograms, trainingLabels)
 
@@ -131,47 +131,67 @@ if __name__ == '__main__':
                     #a frame is an array of 13 mfccs
                     comboList.append(frame)
 
-    # KMeans clustering of combo list
-    kmeans = KMeans(n_clusters=64).fit(comboList)
-
-    # KMeans predict on each clip now, get predicted label
-    trainingHistograms, trainingLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapA)
-    tempHist, tempLabels = (getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapB))
-    trainingHistograms.extend(tempHist)
-    trainingLabels.extend(tempLabels)
-
-    validationHistograms, validationLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapC)
-
-    #now we have training data for an svm
-   
-    #determined dual=True is twice as fast
-
-    #If you run this code, you'll find that the best parameter for a LinearSVC for this data is
-    #0.00999999... = 0.01. I tried values much smaller that that, and up to 10^7 for the C parameter,
-    #and 0.01 is the best. This just averages the values found over a large number of iterations in an
-    #attempt to remove any variance from it. 
-   
-    bestC = 0
-    bestGamma = 0
-    countRBF = 0
-    countLinear = 0
-    tempDict, recRate = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
-    
-    print("Best C from cross-validation was: " + str(tempDict['C']))
-    print("Best Gamma from cross-validation was: " + str(tempDict['gamma']))
-    print("Best Kernel was: " + str(tempDict['kernel']))
-
-
     kmeansSizes = [64, 128, 256, 512, 1024]
+    recRatesForKMeans = []
+    bestCForKMeans = []
+    bestGammaForKMeans = []
+
+    for ksize in kmeansSizes:
+        # KMeans clustering of combo list
+        kmeans = KMeans(n_clusters=ksize).fit(comboList)
+
+        # KMeans predict on each clip now, get predicted label
+        trainingHistograms, trainingLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapA, ksize)
+        tempHist, tempLabels = (getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapB, ksize))
+        trainingHistograms.extend(tempHist)
+        trainingLabels.extend(tempLabels)
+
+        validationHistograms, validationLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapC, ksize)
+
+        #now we have training data for an svm
+       
+        #determined dual=True is twice as fast
+
+        #If you run this code, you'll find that the best parameter for a LinearSVC for this data is
+        #0.00999999... = 0.01. I tried values much smaller that that, and up to 10^7 for the C parameter,
+        #and 0.01 is the best. This just averages the values found over a large number of iterations in an
+        #attempt to remove any variance from it. 
+       
+        tempDict, recRate = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
+        
+        print("Best C from cross-validation was: " + str(tempDict['C']))
+        print("Best Gamma from cross-validation was: " + str(tempDict['gamma']))
+        print("Best Kernel was: " + str(tempDict['kernel']))
+        recRatesForKMeans.append(recRate)
+        bestCForKMeans.append(tempDict['C'])
+        bestGammaForKMeans.append(tempDict['gamma'])
 
     tickmarks = np.arange(1, len(kmeansSizes) + 1)
-    plt.plot(tickmarks, [recRate, recRate + 0.01, recRate + 0.02, recRate + 0.03, recRate + 0.04])
-    plt.xticks(np.arange(1, len(kmeansSizes) + 1), kmeansSizes)
-    plt.title('Accuracy vs. KMeans Clusters')
-    plt.xlabel('Clusters')
-    plt.ylabel('Accuracy')
-    #plt.set_ylim('0.0, 100.0')
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True, figsize=(20,10))
+   
+    ax1.plot(tickmarks, recRatesForKMeans)
+    ax1.set_xticks(tickmarks)
+    ax1.set_xticklabels(kmeansSizes)
+    ax1.set_yticks(recRatesForKMeans)
+    ax1.set_yticklabels(recRatesForKMeans)
+    ax1.set_title('Rec. Rate vs. KMeans Clusters')
+    ax1.set_xlabel('Clusters')
+    ax1.set_ylabel('Rec. Rate')
 
+    ax2.plot(tickmarks, bestCForKMeans)
+    ax2.set_title('C-value vs. KMeans')
+    ax2.set_xlabel('Clusters')
+    ax2.set_ylabel('C-value')
+    ax2.set_yticks(bestCForKMeans)
+    ax2.set_yticklabels(bestCForKMeans)    
+
+    ax3.plot(tickmarks, bestGammaForKMeans)
+    ax3.set_title('Gamma vs. KMeans')
+    ax3.set_xlabel('Clusters')
+    ax3.set_ylabel('Gamma')
+    ax3.set_yticks(bestGammaForKMeans)
+    ax3.set_yticklabels(bestGammaForKMeans)    
+
+    plt.subplots_adjust(hspace=0.5)
     plt.show()
     
-
