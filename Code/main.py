@@ -110,91 +110,97 @@ def findBestParamForLinearSVClassifier(trainingHistograms, trainingLabels, valid
 
 if __name__ == '__main__':
 
-    with open("classToClipsAsFramesOfMFCCsMapA.txt", "rb") as fp:
-        classToClipsAsFramesOfMFCCsMapA = pickle.load(fp)
-    with open("classToClipsAsFramesOfMFCCsMapB.txt", "rb") as fp:
-        classToClipsAsFramesOfMFCCsMapB = pickle.load(fp)
-    with open("classToClipsAsFramesOfMFCCsMapC.txt", "rb") as fp:
-        classToClipsAsFramesOfMFCCsMapC = pickle.load(fp)
-    with open("classToClipsAsFramesOfMFCCsMapD.txt", "rb") as fp:
-        classToClipsAsFramesOfMFCCsMapD = pickle.load(fp)
+    suffixes = ["50m", "100m", "300m"]
     
-    MFCCsMapList = []
-    MFCCsMapList.append(classToClipsAsFramesOfMFCCsMapA)
-    MFCCsMapList.append(classToClipsAsFramesOfMFCCsMapB)
+    for lengthSuffix in suffixes:
 
-    comboList = []
-    for MFCCsMap in MFCCsMapList:
-        for classID in MFCCsMap:
-            #there are a certain amount of clips keyed to each class
-            for clip in MFCCsMap[classID]:
-                #a clip is an array of frames
-                for frame in clip:
-                    #a frame is an array of 13 mfccs
-                    comboList.append(frame)
-
-    kmeansSizes = [64, 128, 256, 512, 1024]
-    recRatesForKMeans = []
-    bestCForKMeans = []
-    bestGammaForKMeans = []
-
-    for ksize in kmeansSizes:
-        # KMeans clustering of combo list
-        kmeans = KMeans(n_clusters=ksize).fit(comboList)
-
-        # KMeans predict on each clip now, get predicted label
-        trainingHistograms, trainingLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapA, ksize)
-        tempHist, tempLabels = (getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapB, ksize))
-        trainingHistograms.extend(tempHist)
-        trainingLabels.extend(tempLabels)
-
-        validationHistograms, validationLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapC, ksize)
-        #testingHistograms, testingLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapD)
-
-        #now we have training data for an svm
-       
-        #determined dual=True is twice as fast
-
-        #If you run this code, you'll find that the best parameter for a LinearSVC for this data is
-        #0.00999999... = 0.01. I tried values much smaller that that, and up to 10^7 for the C parameter,
-        #and 0.01 is the best. This just averages the values found over a large number of iterations in an
-        #attempt to remove any variance from it. 
-       
-        tempDict, recRate = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
+    #start 
+        with open("classToClipsAsFramesOfMFCCsMapA_" + lengthSuffix + ".txt", "rb") as fp:
+            classToClipsAsFramesOfMFCCsMapA = pickle.load(fp)
+        with open("classToClipsAsFramesOfMFCCsMapB_" + lengthSuffix + ".txt", "rb") as fp:
+            classToClipsAsFramesOfMFCCsMapB = pickle.load(fp)
+        with open("classToClipsAsFramesOfMFCCsMapC_" + lengthSuffix + ".txt", "rb") as fp:
+            classToClipsAsFramesOfMFCCsMapC = pickle.load(fp)
+        with open("classToClipsAsFramesOfMFCCsMapD_" + lengthSuffix + ".txt", "rb") as fp:
+            classToClipsAsFramesOfMFCCsMapD = pickle.load(fp)
         
-        print("Best C from cross-validation was: " + str(tempDict['C']))
-        print("Best Gamma from cross-validation was: " + str(tempDict['gamma']))
-        print("Best Kernel was: " + str(tempDict['kernel']))
-        recRatesForKMeans.append(recRate)
-        bestCForKMeans.append(tempDict['C'])
-        bestGammaForKMeans.append(tempDict['gamma'])
+        MFCCsMapList = []
+        MFCCsMapList.append(classToClipsAsFramesOfMFCCsMapA)
+        MFCCsMapList.append(classToClipsAsFramesOfMFCCsMapB)
 
-    tickmarks = np.arange(1, len(kmeansSizes) + 1)
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True, figsize=(20,10))
-   
-    ax1.plot(tickmarks, recRatesForKMeans)
-    ax1.set_xticks(tickmarks)
-    ax1.set_xticklabels(kmeansSizes)
-    ax1.set_yticks(recRatesForKMeans)
-    ax1.set_yticklabels(recRatesForKMeans)
-    ax1.set_title('Rec. Rate vs. KMeans Clusters')
-    ax1.set_xlabel('Clusters')
-    ax1.set_ylabel('Rec. Rate')
+        comboList = []
+        for MFCCsMap in MFCCsMapList:
+            for classID in MFCCsMap:
+                #there are a certain amount of clips keyed to each class
+                for clip in MFCCsMap[classID]:
+                    #a clip is an array of frames
+                    for frame in clip:
+                        #a frame is an array of 13 mfccs
+                        comboList.append(frame)
 
-    ax2.plot(tickmarks, bestCForKMeans)
-    ax2.set_title('C-value vs. KMeans')
-    ax2.set_xlabel('Clusters')
-    ax2.set_ylabel('C-value')
-    ax2.set_yticks(bestCForKMeans)
-    ax2.set_yticklabels(bestCForKMeans)    
+        kmeansSizes = [64, 128, 256, 512, 1024]
+        recRatesForKMeans = []
+        bestCForKMeans = []
+        bestGammaForKMeans = []
 
-    ax3.plot(tickmarks, bestGammaForKMeans)
-    ax3.set_title('Gamma vs. KMeans')
-    ax3.set_xlabel('Clusters')
-    ax3.set_ylabel('Gamma')
-    ax3.set_yticks(bestGammaForKMeans)
-    ax3.set_yticklabels(bestGammaForKMeans)    
+        for ksize in kmeansSizes:
+            # KMeans clustering of combo list
+            kmeans = KMeans(n_clusters=ksize).fit(comboList)
 
-    plt.subplots_adjust(hspace=0.5)
-    plt.show()
+            # KMeans predict on each clip now, get predicted label
+            trainingHistograms, trainingLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapA, ksize)
+            tempHist, tempLabels = (getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapB, ksize))
+            trainingHistograms.extend(tempHist)
+            trainingLabels.extend(tempLabels)
+
+            validationHistograms, validationLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapC, ksize)
+            #testingHistograms, testingLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapD)
+
+            #now we have training data for an svm
+        
+            #determined dual=True is twice as fast
+
+            #If you run this code, you'll find that the best parameter for a LinearSVC for this data is
+            #0.00999999... = 0.01. I tried values much smaller that that, and up to 10^7 for the C parameter,
+            #and 0.01 is the best. This just averages the values found over a large number of iterations in an
+            #attempt to remove any variance from it. 
+        
+            tempDict, recRate = findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationHistograms, validationLabels)
+            
+            print("Best C from cross-validation was: " + str(tempDict['C']))
+            print("Best Gamma from cross-validation was: " + str(tempDict['gamma']))
+            print("Best Kernel was: " + str(tempDict['kernel']))
+            recRatesForKMeans.append(recRate)
+            bestCForKMeans.append(tempDict['C'])
+            bestGammaForKMeans.append(tempDict['gamma'])
+
+        tickmarks = np.arange(1, len(kmeansSizes) + 1)
+        fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True, figsize=(20,10))
+    
+        ax1.plot(tickmarks, recRatesForKMeans)
+        ax1.set_xticks(tickmarks)
+        ax1.set_xticklabels(kmeansSizes)
+        ax1.set_yticks(recRatesForKMeans)
+        ax1.set_yticklabels(recRatesForKMeans)
+        ax1.set_title('Rec. Rate vs. KMeans Clusters')
+        ax1.set_xlabel('Clusters')
+        ax1.set_ylabel('Rec. Rate')
+
+        ax2.plot(tickmarks, bestCForKMeans)
+        ax2.set_title('C-value vs. KMeans')
+        ax2.set_xlabel('Clusters')
+        ax2.set_ylabel('C-value')
+        ax2.set_yticks(bestCForKMeans)
+        ax2.set_yticklabels(bestCForKMeans)    
+
+        ax3.plot(tickmarks, bestGammaForKMeans)
+        ax3.set_title('Gamma vs. KMeans')
+        ax3.set_xlabel('Clusters')
+        ax3.set_ylabel('Gamma')
+        ax3.set_yticks(bestGammaForKMeans)
+        ax3.set_yticklabels(bestGammaForKMeans)    
+
+        plt.subplots_adjust(hspace=0.5)
+        plt.show()
+    #end
     
