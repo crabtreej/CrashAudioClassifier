@@ -26,8 +26,8 @@ def findBestParamForSVClassifier(trainingHistograms, trainingLabels, validationH
     c_value = '' 
     param_values = ''
 
-    c_values = [1.0, 1.5, 2.0, 2.5, 3, 3.5, 4, 4.5, 5,5.5,6,6.5,7,7.5,8]
-    gamma_values = [.0007,.0008, .00085, .0009, .00095, .001, .0011, .0012, .0015, .002]
+    c_values = [0.5, 0.1, 1.0, 1.5, 2.0, 2.5, 3, 3.5, 4, 4.5, 5,5.5,6,6.5,7,7.5,8]
+    gamma_values = [0.0001, 0.0003, 0.0005, .0007,.0008, .00085, .0009, .00095, .001, .0011, .0012, .0015, .002]
  
     param_grid = [
         {'C': c_values, 'gamma': gamma_values, 'kernel': ['rbf']},
@@ -111,7 +111,8 @@ def findBestParamForLinearSVClassifier(trainingHistograms, trainingLabels, valid
 if __name__ == '__main__':
 
     suffixes = ["50m", "100m", "300m"]
-    
+   
+    figNum = 0 
     for lengthSuffix in suffixes:
 
     #start 
@@ -174,9 +175,10 @@ if __name__ == '__main__':
             bestCForKMeans.append(tempDict['C'])
             bestGammaForKMeans.append(tempDict['gamma'])
 
+        plt.figure(figNum)
         tickmarks = np.arange(1, len(kmeansSizes) + 1)
         fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True, figsize=(20,10))
-    
+        fig.suptitle(lengthSuffix, fontsize=16)
         ax1.plot(tickmarks, recRatesForKMeans)
         ax1.set_xticks(tickmarks)
         ax1.set_xticklabels(kmeansSizes)
@@ -201,6 +203,8 @@ if __name__ == '__main__':
         ax3.set_yticklabels(bestGammaForKMeans)    
 
         plt.subplots_adjust(hspace=0.5)
-        plt.show()
+        figNum += 1
+
+    plt.show()
     #end
     
