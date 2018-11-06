@@ -116,6 +116,8 @@ if __name__ == '__main__':
         classToClipsAsFramesOfMFCCsMapB = pickle.load(fp)
     with open("classToClipsAsFramesOfMFCCsMapC.txt", "rb") as fp:
         classToClipsAsFramesOfMFCCsMapC = pickle.load(fp)
+    with open("classToClipsAsFramesOfMFCCsMapD.txt", "rb") as fp:
+        classToClipsAsFramesOfMFCCsMapD = pickle.load(fp)
     
     MFCCsMapList = []
     MFCCsMapList.append(classToClipsAsFramesOfMFCCsMapA)
@@ -147,6 +149,7 @@ if __name__ == '__main__':
         trainingLabels.extend(tempLabels)
 
         validationHistograms, validationLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapC, ksize)
+        #testingHistograms, testingLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapD)
 
         #now we have training data for an svm
        
