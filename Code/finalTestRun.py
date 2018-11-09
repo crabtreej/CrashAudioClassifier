@@ -174,37 +174,30 @@ if __name__ == '__main__':
             bestC, bestGamma = clustersToBestCsandGammas[ksize]
             crashSVC = SVC(C=bestC, gamma=bestGamma, kernel='rbf', max_iter=10000)
             crashSVC.fit(trainingHistograms, trainingLabels)
+            
+            testPredictions = crashSVC.predict(testingHistograms)
+            print(classification_report(testingLabels, testPredictions))
+            print()
 
-            recRatesForKMeans.append(recRate)
-            bestCForKMeans.append(tempDict['C'])
-            bestGammaForKMeans.append(tempDict['gamma'])
+            recognition_rate = 0.0
+            for true, pred in zip(testingLabels, testPredictions):
+                if true == pred:
+                    recognition_rate += 1.0
+
+            recRatesForKMeans.append(recognition_rate / len(testingLabels))
 
         plt.figure(figNum)
         tickmarks = np.arange(1, len(kmeansSizes) + 1)
-        fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True, figsize=(20,10))
-        fig.suptitle(lengthSuffix, fontsize=16)
+        fig, ax1 = plt.subplots(1, 1, sharex=True, figsize=(20,10))
+        fig.suptitle(lengthSuffix + 's Frame Length', fontsize=16)
         ax1.plot(tickmarks, recRatesForKMeans)
         ax1.set_xticks(tickmarks)
         ax1.set_xticklabels(kmeansSizes)
         ax1.set_yticks(recRatesForKMeans)
         ax1.set_yticklabels(recRatesForKMeans)
         ax1.set_title('Rec. Rate vs. KMeans Clusters')
-        ax1.set_xlabel('Clusters')
+        ax1.set_xlabel('# of KMeans Clusters')
         ax1.set_ylabel('Rec. Rate')
-
-        ax2.plot(tickmarks, bestCForKMeans)
-        ax2.set_title('C-value vs. KMeans')
-        ax2.set_xlabel('Clusters')
-        ax2.set_ylabel('C-value')
-        ax2.set_yticks(bestCForKMeans)
-        ax2.set_yticklabels(bestCForKMeans)    
-
-        ax3.plot(tickmarks, bestGammaForKMeans)
-        ax3.set_title('Gamma vs. KMeans')
-        ax3.set_xlabel('Clusters')
-        ax3.set_ylabel('Gamma')
-        ax3.set_yticks(bestGammaForKMeans)
-        ax3.set_yticklabels(bestGammaForKMeans)    
 
         plt.subplots_adjust(hspace=0.5)
         figNum += 1
