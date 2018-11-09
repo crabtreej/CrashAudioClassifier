@@ -131,8 +131,6 @@ if __name__ == '__main__':
                 classToClipsAsFramesOfMFCCsMapC[classID] = classToClipsAsFramesOfMFCCsMapC[classID][:len(classToClipsAsFramesOfMFCCsMapC[classID])//2]
         with open("classToClipsAsFramesOfMFCCsMapD_" + lengthSuffix + ".txt", "rb") as fp:
             classToClipsAsFramesOfMFCCsMapD = pickle.load(fp)
-            for classID in classToClipsAsFramesOfMFCCsMapD:
-                classToClipsAsFramesOfMFCCsMapD[classID] = classToClipsAsFramesOfMFCCsMapD[classID][:len(classToClipsAsFramesOfMFCCsMapD[classID])//2]
         
         MFCCsMapList = []
         MFCCsMapList.append(classToClipsAsFramesOfMFCCsMapA)
