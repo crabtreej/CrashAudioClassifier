@@ -159,7 +159,7 @@ if __name__ == '__main__':
             trainingHistograms.extend(tempHist)
             trainingLabels.extend(tempLabels)
 
-            testingHistograms, testingLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapD)
+            testingHistograms, testingLabels = getHistogramsAndMembershipFromKMeans(kmeans, classToClipsAsFramesOfMFCCsMapD, ksize)
 
             #now we have training data for an svm
         
