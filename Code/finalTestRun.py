@@ -182,6 +182,8 @@ if __name__ == '__main__':
             crashSVC.fit(trainingHistograms, trainingLabels)
             
             testPredictions = crashSVC.predict(testingHistograms)
+            print(f'Printing classification report for cluster {ksize} and frame size {lengthSuffix}:')
+            print()
             print(classification_report(testingLabels, testPredictions))
             print()
 
